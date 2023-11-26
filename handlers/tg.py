@@ -187,12 +187,25 @@ class TgClient(TgHandler):
             return
 
     async def thumb(self):
-        t = await self.bot.ask(
-            self.m.chat.id,
-            "**Send Thumb JPEG/PNG or Telegraph LinK :-**"
-        )
-        if t.text:
-            thumb = t.text
-        elif t.photo:
-            thumb = await TgClient.downloadMedia(self, t)
+        t = await editable.edit("**Enter Your Name or send `de` for use default**")
+    input3: Message = await bot.listen(editable.chat.id)
+    raw_text3 = input3.text
+    await input3.delete(True)
+    if raw_text3 == 'de':
+        CR = credit
+    else:
+        CR = raw_text3
+
+    await editable.edit("Now send the **Thumb url**\nEg : ```https://telegra.ph/file/0633f8b6a6f110d34f044.jpg```\n\nor Send `no`")
+    input6 = message = await bot.listen(editable.chat.id)
+    raw_text6 = input6.text
+    await input6.delete(True)
+    await editable.delete()
+
+    thumb = input6.text
+    if thumb.startswith("http://") or thumb.startswith("https://"):
+        getstatusoutput(f"wget '{thumb}' -O 'thumb.jpg'")
+        thumb = "thumb.jpg"
+    else:
+        thumb == "no"
         return thumb
